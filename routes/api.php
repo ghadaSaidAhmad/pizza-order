@@ -32,6 +32,11 @@ Route::group(['middleware' => 'auth.jwt'], function () {
         Route::resource('pizzas', 'PizzaController');
         
         //order 
+
+        
+        Route::post('orders/filtter', 'OrderController@filtter');
+        Route::get('orders/showByName/{name}', 'OrderController@showByName');
+       
         Route::resource('orders', 'OrderController');
 
     });

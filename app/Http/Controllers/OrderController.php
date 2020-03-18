@@ -10,6 +10,11 @@ use App\Item;
 class OrderController extends BaseController
 {
 
+      /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $data= $this->user->orders()->get()->toArray();
@@ -22,6 +27,14 @@ class OrderController extends BaseController
         return  $this->response(true,'rows  successfully  listed',$data);  
         
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
     public function show($id)
     {
         $order = Order::find($id);
@@ -35,7 +48,60 @@ class OrderController extends BaseController
        
     }
 
+    /**
+     * filtter the specified resource by username or order status.
+     *
+     * @param  int  $username
+     * @param  int  $order status
+     * @return \Illuminate\Http\Response
+     */
+    public function filtter(Request $request)
+    {
+        $userName     = $request->user_name;
+        $orderStatus  = $request->order_status;
 
+        $order        = Order::Join('users', function($join) use ($userName)
+                          {
+                              $join->on('users.id', '=', 'orders.user_id');
+                              $join->where('users.name',$userName);
+                          })
+                       ->orWhere('orders.status',$orderStatus)   
+                      ->get();
+        
+        if(!$order)
+        {
+            return  $this->response(false,'no rows found',[]);  
+        }
+        
+        return  $this->response(true,'rows  successfully  listed',$order); 
+       
+    }
+
+    /**
+     * showByName the specified resource by name 
+     *
+     * @param  int  $name
+     * @return \Illuminate\Http\Response
+     */
+    public function showByName($name)
+    {
+        $order = Order::where('name',$name)->first();
+        if(!$order)
+        {
+            return  $this->response(false,'no rows found',[]);  
+        }
+        
+        return  $this->response(true,'rows  successfully  listed',$order); 
+       
+    }
+    
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
 
@@ -73,6 +139,14 @@ class OrderController extends BaseController
     }
 
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
     public function update(Request $request, $id)
     {
    
@@ -90,6 +164,13 @@ class OrderController extends BaseController
             $this->response(false,'sorry,faild to update order ',500);
         
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
 
     public function destroy($id)
     {
@@ -111,5 +192,5 @@ class OrderController extends BaseController
 
 
     }
-    //
+    
 }

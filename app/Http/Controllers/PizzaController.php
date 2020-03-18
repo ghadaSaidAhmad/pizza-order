@@ -11,8 +11,12 @@ use App\Pizza;
 
 class PizzaController extends BaseController
 {
-
-
+    
+   /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+    */
     public function index()
     {
         $data= Pizza::get()->toArray();
@@ -22,18 +26,31 @@ class PizzaController extends BaseController
         }
         return  $this->response(false,'no rows found',[]);
     }
-    
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function show($id)
     {
         $pizza = Pizza::find($id);
-    
-        if (!$pizza) {
-            return  $this->response(false,'Sorry, Sorry with id ' . $id . ' cannot be found',400);
+
+        if (!$pizza) 
+        {
+          return  $this->response(false,'Sorry, Sorry with id ' . $id . ' cannot be found',400);
         }
     
         return $pizza;
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(AddPizzaRequest $request)
     {
         $pizza = new Pizza($request->except(['token']));
@@ -46,6 +63,13 @@ class PizzaController extends BaseController
  
     }
 
+      /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(updatePizzaRequest $request, $id)
     {
         $pizza = Pizza::find($id);
@@ -64,6 +88,13 @@ class PizzaController extends BaseController
         
         
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
 
     public function destroy($id)
     {
