@@ -14,9 +14,10 @@ class BaseController extends Controller
     {
         $this->user = JWTAuth::parseToken()->authenticate();
     }
-    public function response($status,$message,$code=200)
+    public function response($status,$message='',$data=[],$code=200)
     {
         return response()->json([
+            'data'   =>$data,
             'success' => $status,
             'message' => $message
         ], $code);

@@ -5,78 +5,111 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use JWTAuth;
 use App\Order;
+use App\Item;
 
-class OrderController extends Controller
+class OrderController extends BaseController
 {
-    protected $user;
- 
-    public function __construct()
-    {
-        $this->user = JWTAuth::parseToken()->authenticate();
-    }
+
     public function index()
     {
-        return $this->user
-            ->orders()
-            ->toArray();
+        $data= $this->user->orders()->get()->toArray();
+
+        if(!$data)
+        {
+            return  $this->response(false,'no rows found',[]);  
+        }
+        
+        return  $this->response(true,'rows  successfully  listed',$data);  
+        
     }
     public function show($id)
     {
+        $order = Order::find($id);
+        
+        if(!$order)
+        {
+            return  $this->response(false,'no rows found',[]);  
+        }
+        
+        return  $this->response(true,'rows  successfully  listed',$order); 
        
     }
 
+
     public function store(Request $request)
     {
+
+        $order = new Order();
+        $order->name = $request->name;
+        $this->user->orders()->save($order);
+        if(count($request->items)>0)
+        {
+            $order=$this->user->orders()->save($order);
+            $flag=true;
+
+            //add order items (pizzas)
+            foreach($request->items as $item)
+            {
+               
+                $itemObject =new Item([
+                    'order_id' => $order->id,
+                    'pizza_id' => $item['pizza_id'],
+                    'size' => $item['size'],
+                    'number' => $item['number'],
+                ]);
+
+                $flag=$order->items()->save($itemObject)?true:false; 
+            }
+            if ($flag) {
+                  return $this->response(true,'order added successfuly');
+            }
+             $this->response(false,'sorry,faild to add order ',500);
+  
+            //
+        }
+        
+
         
     }
 
+
     public function update(Request $request, $id)
     {
-        $product = $this->user->products()->find($id);
-    
-        if (!$product) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Sorry, product with id ' . $id . ' cannot be found'
-            ], 400);
+   
+        $order = Order::find($id);
+        if (!$order) {
+
+            return $this->response(false,[],'Sorry, product with id ' . $id . ' cannot be found',400);
         }
-    
-        $updated = $product->fill($request->all())
-            ->save();
-    
-        if ($updated) {
-            return response()->json([
-                'success' => true
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Sorry, product could not be updated'
-            ], 500);
+        $order->status = $request->status;
+
+        if ($order->save()) {
+            return $this->response(true,'order updated successfuly');
+           
         }
+            $this->response(false,'sorry,faild to update order ',500);
+        
     }
 
     public function destroy($id)
     {
-        $product = $this->user->products()->find($id);
-    
-        if (!$product) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Sorry, product with id ' . $id . ' cannot be found'
-            ], 400);
+        $order = Order::find($id);
+
+        if (!$order) {
+            return $this->response(false,[],'Sorry, row with id ' . $id . ' cannot be found',400);
         }
-    
-        if ($product->delete()) {
-            return response()->json([
-                'success' => true
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Product could not be deleted'
-            ], 500);
+        if ($order->status!=0) {
+          
+            if($order->delete())
+            {
+                return $this->response(true,'row  be deleted');
+            }
+  
         }
+        return $this->response(false,'row could not be deleted',500);
+        
+
+
     }
     //
 }

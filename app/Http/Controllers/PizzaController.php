@@ -15,7 +15,12 @@ class PizzaController extends BaseController
 
     public function index()
     {
-        return Pizza::all()->toArray();
+        $data= Pizza::get()->toArray();
+        if($data)
+        {
+            return  $this->response(true,'rows  successfully  listed',$data);
+        }
+        return  $this->response(false,'no rows found',[]);
     }
     
     public function show($id)

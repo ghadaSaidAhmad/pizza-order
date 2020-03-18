@@ -27,11 +27,12 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('user', 'ApiController@getAuthUser');
  
     Route::group(['prefix' => 'v1'], function(){
-            Route::get('pizzas', 'PizzaController@index');
-            Route::get('pizzas/{id}', 'PizzaController@show');
-            Route::post('pizzas', 'PizzaController@store');
-            Route::put('pizzas/{id}', 'PizzaController@update');
-            Route::delete('pizzas/{id}', 'PizzaController@destroy');
+
+        //pizzas
+        Route::resource('pizzas', 'PizzaController');
+        
+        //order 
+        Route::resource('orders', 'OrderController');
 
     });
 });

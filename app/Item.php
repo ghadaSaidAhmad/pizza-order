@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Item extends Model
 {
     
     /**
@@ -13,25 +13,16 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
-        'status', 'user_id'
+        'pizza_id', 'order_id','size','number'
     ];
 
      /**
      * Get the user that order this order.
      */
-    public function user()
+    public function Order()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Order');
     }
 
-
-    /**
-     * Get the items for the order post.
-     */
-
-    public function items()
-    {
     
-    return $this->hasMany('App\Item');
-    }
 }
