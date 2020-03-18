@@ -12,7 +12,7 @@ class Pizza extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'flavor'
+        'name', 'flavor','price'
     ];
 
     /**

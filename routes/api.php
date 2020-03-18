@@ -16,3 +16,28 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::post('login', 'ApiController@login');
+Route::post('register', 'ApiController@register');
+ 
+Route::group(['middleware' => 'auth.jwt'], function () {
+
+    Route::get('logout', 'ApiController@logout');
+    Route::get('user', 'ApiController@getAuthUser');
+ 
+    Route::group(['prefix' => 'v1'], function(){
+            Route::get('pizzas', 'PizzaController@index');
+            Route::get('pizzas/{id}', 'PizzaController@show');
+            Route::post('pizzas', 'PizzaController@store');
+            Route::put('pizzas/{id}', 'PizzaController@update');
+            Route::delete('pizzas/{id}', 'PizzaController@destroy');
+
+    });
+});
+
+
+
+
+
+

@@ -1,64 +1,56 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use JWTAuth;
 use App\User;
 use Illuminate\Http\Request;
-use App\Http\Requests\RegisterAuthRequest;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\RegistrationFormRequest;
 
-
-class ApiController extends Controller
+class APIController extends Controller
 {
-    
+    /**
+     * @var bool
+     */
     public $loginAfterSignUp = true;
- 
-    public function register(RegisterAuthRequest $request)
-    {
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->save();
- 
-        if ($this->loginAfterSignUp) {
-            return $this->login($request);
-        }
- 
-        return response()->json([
-            'success' => true,
-            'data' => $user
-        ], Response::HTTP_OK);
-    }
- 
-    public function login(Request $request)
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+public function login(Request $request)
     {
         $input = $request->only('email', 'password');
-        $jwt_token = null;
- 
-        if (!$jwt_token = JWTAuth::attempt($input)) {
+        $token = null;
+
+        if (!$token = JWTAuth::attempt($input)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid Email or Password',
-            ], Response::HTTP_UNAUTHORIZED);
+            ], 401);
         }
- 
+
         return response()->json([
             'success' => true,
-            'token' => $jwt_token,
+            'token' => $token,
         ]);
     }
- 
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function logout(Request $request)
     {
         $this->validate($request, [
             'token' => 'required'
         ]);
- 
+
         try {
             JWTAuth::invalidate($request->token);
- 
+
             return response()->json([
                 'success' => true,
                 'message' => 'User logged out successfully'
@@ -67,18 +59,30 @@ class ApiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Sorry, the user cannot be logged out'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], 500);
         }
     }
- 
-    public function getAuthUser(Request $request)
+
+    /**
+     * @param RegistrationFormRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register(RegistrationFormRequest $request)
     {
-        $this->validate($request, [
-            'token' => 'required'
-        ]);
- 
-        $user = JWTAuth::authenticate($request->token);
- 
-        return response()->json(['user' => $user]);
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->address = $request->address;
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        if ($this->loginAfterSignUp) {
+            return $this->login($request);
+        }
+
+        return response()->json([
+            'success'   =>  true,
+            'data'      =>  $user
+        ], 200);
     }
 }
