@@ -1,23 +1,77 @@
-##Laravel Developer Challenge
+# Laravel Developer Challenge
 
-a challenge for Laravel developer position in Masdr team. Create a Pizza order application
+a challenge for Laravel developer position in Masr team. 
+Create a Pizza order application 
+laravel authentication for laravel 6 using JWT Auth
 
- Add Pizza:
- 
-    -- All crud functionality shoud be implemented.
 
-    Order pizza:
-    -- All crud functionality shoud be implemented.
-    -- It should be possible to specify the desired flavors of pizza, the number of pizzas and their size.
-    -- An order should contain information regarding the customer (Customer name and Address are must).
 
-    Update an order:
-    -- You can only update the status of delivery for the order
-    -- You can not delete an order unless it's delieverd.
+# Docker Installing 
 
-    Retrieve an order:
-    -- It should be possible to retrieve the order by id or name.
+## Require
 
-    List orders:
-    -- List all the orders at once.
-    -- Filter orders by customer name or the status of delivery.
++ Docker
+
+## Setup
+
+
+1. Clone your project  
+
+    ```
+    git clone https://github.com/ghadaSaidAhmad/pizza-order.git
+    ```
+
+
+2. cd pizza-order/laradock 
+
+    ```
+   cd pizza-order/laradock
+    ```
+
+3. build inital  container 
+
+    ```
+    $ docker-compose up -d apache2 mariadb phpmyadmin
+    ```
+
+4. edit your hostes file  \etc\hostes
+
+    ```
+    pizza.test
+    ```
+
+5. access the main docker workspace bash
+
+    ```
+    $winpty docker exec -it laradock_workspace_1 bash
+
+    ``` 
+6. migrte database
+
+    ```
+    $php artisan migrate 
+
+    ``` 
+
+7. accesss project using pizza.test
+
+8.if you need access phpmyadmin  http://localhost:8888/
+
+    ```
+    server:mariadb
+    username:root
+    password:root 
+
+    ```
+    
+
+
+
+## Running the tests
+
+
+
+
+
+
+
