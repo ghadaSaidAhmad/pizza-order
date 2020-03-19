@@ -1,77 +1,72 @@
 # Laravel Developer Challenge
 
-a challenge for Laravel developer position in Masr team. 
-Create a Pizza order application 
-laravel authentication for laravel 6 using JWT Auth
+A challenge for laravel developer position in Masr team.
+Creating a pizza order application
+using laravel JWT authentication.
 
+# Installation Guidelines
 
+## Prerequisites
 
-# Docker Installing 
+- Docker
 
-## Require
+## Installation Setups
 
-+ Docker
+1. Clone the project files
 
-## Setup
+   ```
+   git clone https://github.com/ghadaSaidAhmad/pizza-order.git
+   ```
 
+2) cd into project directory
 
-1. Clone your project  
+   ```
+   cd /pizza-order/laradock
+   ```
 
-    ```
-    git clone https://github.com/ghadaSaidAhmad/pizza-order.git
-    ```
+3) Build the required docker containers through `docker-compose`
 
+   ```
+   docker-compose up -d apache2 mariadb phpmyadmin
+   ```
 
-2. cd pizza-order/laradock 
+4) Append this DNS record to your hostes file Linux/Mac: `/etc/hostes` or Windows: `C:\Windows\System32\Drivers\hosts`
 
-    ```
-   cd pizza-order/laradock
-    ```
+   ```
+   # Pissa dockerized laravel project domain
+   127.0.0.1 pizza.test
+   ```
 
-3. build inital  container 
+5) Access the main docker workspace bash
 
-    ```
-    $ docker-compose up -d apache2 mariadb phpmyadmin
-    ```
+   ```
+   winpty docker exec -it laradock_workspace_1 bash
+   # winpty: for windows users
 
-4. edit your hostes file  \etc\hostes
+   ```
 
-    ```
-    pizza.test
-    ```
+6) Migrte your database
 
-5. access the main docker workspace bash
+   ```
+   php artisan migrate
 
-    ```
-    $winpty docker exec -it laradock_workspace_1 bash
+   ```
 
-    ``` 
-6. migrte database
+7) Open your browser and go to [pizza.test](pizza.test)
 
-    ```
-    $php artisan migrate 
-
-    ``` 
-
-7. accesss project using pizza.test
-
-8.if you need access phpmyadmin  http://localhost:8888/
-
-    ```
-    server:mariadb
-    username:root
-    password:root 
+8.if you need access phpmyadmin http://localhost:8888/
 
     ```
-    
+    Server: mariadb
+    Username: root
+    Password: root
 
+    ```
 
+9. To start, restart or stop docker containers
+
+   ```
+   docker-compose [start,stop,restart]
+   ```
 
 ## Running the tests
-
-
-
-
-
-
-
