@@ -68,5 +68,3 @@ using laravel JWT authentication.
    ```
    docker-compose [start,stop,restart]
    ```
-
-## Running the tests
