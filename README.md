@@ -68,3 +68,13 @@ using laravel JWT authentication.
    ```
    docker-compose [start,stop,restart]
    ```
+
+## Runnung UnitTest
+
+  ```
+    ./vendor/bin/phpunit tests/Feature/Http/Controllers/Api/PizzaControllerTest.php
+   ```
+
+## Postman Documention
+
+[here](https://documenter.getpostman.com/view/1789565/SzS5v77M?version=latest)
